@@ -1,5 +1,6 @@
 import * as THREE from 'https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js';
 import { OrbitControls } from 'https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/controls/OrbitControls.js';
+import { BufferGeometryUtils } from 'https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/utils/BufferGeometryUtils.js';
 import { exportDXF, exportSVG } from './dxf-exporter.js';
 
 // Global variables
@@ -96,15 +97,18 @@ window.addEventListener('resize', () => {
 // Load STEP file
 async function loadSTEPFile(file) {
     try {
+        console.log('Loading file:', file.name, 'Size:', file.size, 'bytes');
         updateStatus('Loading STEP file...');
 
         // For this demo, we'll create a simple parser simulation
         // In production, you would use occt-import-js here
         const arrayBuffer = await file.arrayBuffer();
+        console.log('File loaded, ArrayBuffer size:', arrayBuffer.byteLength);
 
         // Simulate STEP parsing with a placeholder geometry
         // Note: Real implementation would use OCCLoader from occt-import-js
         const geometry = createPlaceholderGeometry();
+        console.log('Geometry created, vertices:', geometry.attributes.position.count);
         const material = new THREE.MeshPhongMaterial({
             color: 0x3498db,
             flatShading: false,
@@ -170,9 +174,7 @@ function createPlaceholderGeometry() {
         }
     });
 
-    return THREE.BufferGeometryUtils ?
-        THREE.BufferGeometryUtils.mergeGeometries(geometries) :
-        bodyGeometry; // Fallback
+    return BufferGeometryUtils.mergeGeometries(geometries);
 }
 
 // Fit camera to object
