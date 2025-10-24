@@ -38,7 +38,7 @@ The solution must be compatible with **GitHub Pages** (static hosting).
 #### index.html
 - Contains a `<canvas>` element for the Three.js viewer.  
 - Basic UI controls: file upload, view selection, export buttons.  
-- Simple styling (Tailwind or plain CSS).
+- Simple styling using sebasdv-design-system.css.
 
 #### main.js
 - Initializes the scene, camera, and renderer.  
@@ -51,8 +51,8 @@ The solution must be compatible with **GitHub Pages** (static hosting).
 - Converts visible 3D geometry into 2D projected entities (lines/polylines).  
 - Uses `THREE.Projector` or camera matrices for orthographic projection.
 
-#### style.css
-- Provides a minimal and clean layout for the viewer and controls.
+#### sebasdv-design-system.css
+- Provides a minimal and clean layout for the viewer and controls using the sebasdv design system.
 
 ---
 
@@ -80,7 +80,7 @@ step-to-dxf-viewer/
 ├── index.html
 ├── main.js
 ├── dxf-exporter.js
-├── style.css
+├── sebasdv-design-system.css
 ├── assets/
 │   ├── logo.svg
 │   └── demo.step
