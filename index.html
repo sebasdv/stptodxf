@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>STEP to DXF Viewer</title>
+    <link rel="stylesheet" href="sebasdv-design-system.css">
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+        }
+
+        #container {
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+        }
+
+        #header {
+            background: #2c3e50;
+            color: white;
+            padding: 1rem 2rem;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            z-index: 100;
+        }
+
+        h1 {
+            margin: 0;
+            font-size: 1.5rem;
+            font-weight: 600;
+        }
+
+        #controls {
+            background: #34495e;
+            color: white;
+            padding: 1rem 2rem;
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+            align-items: center;
+            z-index: 100;
+        }
+
+        .control-group {
+            display: flex;
+            gap: 0.5rem;
+            align-items: center;
+        }
+
+        .control-group label {
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+
+        button {
+            padding: 0.5rem 1rem;
+            background: #3498db;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            font-weight: 500;
+            transition: background 0.2s;
+        }
+
+        button:hover {
+            background: #2980b9;
+        }
+
+        button:disabled {
+            background: #95a5a6;
+            cursor: not-allowed;
+        }
+
+        .file-input-wrapper {
+            position: relative;
+            overflow: hidden;
+            display: inline-block;
+        }
+
+        .file-input-wrapper input[type=file] {
+            position: absolute;
+            left: -9999px;
+        }
+
+        .file-input-label {
+            padding: 0.5rem 1rem;
+            background: #27ae60;
+            color: white;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            font-weight: 500;
+            display: inline-block;
+            transition: background 0.2s;
+        }
+
+        .file-input-label:hover {
+            background: #229954;
+        }
+
+        #viewer {
+            flex: 1;
+            position: relative;
+            background: #ecf0f1;
+        }
+
+        #canvas {
+            width: 100%;
+            height: 100%;
+            display: block;
+        }
+
+        #dropzone {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+            pointer-events: none;
+            color: #7f8c8d;
+        }
+
+        #dropzone.hidden {
+            display: none;
+        }
+
+        #dropzone h2 {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+        }
+
+        #dropzone p {
+            font-size: 1.2rem;
+        }
+
+        #status {
+            padding: 0.5rem 2rem;
+            background: #ecf0f1;
+            font-size: 0.85rem;
+            color: #34495e;
+            border-top: 1px solid #bdc3c7;
+        }
+
+        .btn-view {
+            background: #9b59b6;
+        }
+
+        .btn-view:hover {
+            background: #8e44ad;
+        }
+
+        .btn-export {
+            background: #e74c3c;
+        }
+
+        .btn-export:hover {
+            background: #c0392b;
+        }
+
+        .separator {
+            width: 1px;
+            height: 2rem;
+            background: #7f8c8d;
+            margin: 0 0.5rem;
+        }
+    </style>
+</head>
+<body>
+    <div id="container">
+        <div id="header">
+            <h1>STEP to DXF Web Viewer</h1>
+        </div>
+
+        <div id="controls">
+            <div class="control-group">
+                <div class="file-input-wrapper">
+                    <input type="file" id="fileInput" accept=".step,.stp" />
+                    <label for="fileInput" class="file-input-label">Choose STEP File</label>
+                </div>
+            </div>
+
+            <div class="separator"></div>
+
+            <div class="control-group">
+                <label>View:</label>
+                <button id="btnTop" class="btn-view" disabled>Top</button>
+                <button id="btnFront" class="btn-view" disabled>Front</button>
+                <button id="btnRight" class="btn-view" disabled>Right</button>
+                <button id="btnIso" class="btn-view" disabled>Isometric</button>
+            </div>
+
+            <div class="separator"></div>
+
+            <div class="control-group">
+                <label>Export:</label>
+                <button id="btnExportDXF" class="btn-export" disabled>Export DXF</button>
+                <button id="btnExportSVG" class="btn-export" disabled>Export SVG</button>
+            </div>
+        </div>
+
+        <div id="viewer">
+            <canvas id="canvas"></canvas>
+            <div id="dropzone">
+                <h2>Drop STEP file here</h2>
+                <p>or use the "Choose STEP File" button</p>
+            </div>
+        </div>
+
+        <div id="status">Ready - No file loaded</div>
+    </div>
+
+    <script type="module" src="main.js"></script>
+</body>
+</html>
