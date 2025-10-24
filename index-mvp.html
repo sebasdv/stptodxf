@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>3D Model to DXF Converter</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            overflow: hidden;
+        }
+
+        #app {
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+        }
+
+        header {
+            background: #2c3e50;
+            color: white;
+            padding: 1rem 2rem;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        h1 {
+            font-size: 1.25rem;
+            font-weight: 600;
+        }
+
+        #controls {
+            background: #34495e;
+            color: white;
+            padding: 1rem 2rem;
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        button, .file-label {
+            padding: 0.5rem 1rem;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.875rem;
+            font-weight: 500;
+            transition: background 0.2s;
+        }
+
+        #fileInput {
+            display: none;
+        }
+
+        .file-label {
+            background: #27ae60;
+            color: white;
+            display: inline-block;
+        }
+
+        .file-label:hover {
+            background: #229954;
+        }
+
+        button {
+            background: #3498db;
+            color: white;
+        }
+
+        button:hover:not(:disabled) {
+            background: #2980b9;
+        }
+
+        button:disabled {
+            background: #95a5a6;
+            cursor: not-allowed;
+        }
+
+        .btn-export {
+            background: #e74c3c;
+        }
+
+        .btn-export:hover:not(:disabled) {
+            background: #c0392b;
+        }
+
+        #viewer {
+            flex: 1;
+            position: relative;
+            background: #ecf0f1;
+        }
+
+        #canvas {
+            width: 100%;
+            height: 100%;
+        }
+
+        #dropzone {
+            position: absolute;
+            inset: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: #7f8c8d;
+            pointer-events: none;
+        }
+
+        #dropzone.hidden {
+            display: none;
+        }
+
+        #status {
+            padding: 0.5rem 2rem;
+            background: #ecf0f1;
+            font-size: 0.875rem;
+            border-top: 1px solid #bdc3c7;
+        }
+
+        .divider {
+            width: 1px;
+            height: 2rem;
+            background: #7f8c8d;
+            margin: 0 0.5rem;
+        }
+    </style>
+</head>
+<body>
+    <div id="app">
+        <header>
+            <h1>3D Model to DXF Converter</h1>
+        </header>
+
+        <div id="controls">
+            <label for="fileInput" class="file-label">Upload STL File</label>
+            <input type="file" id="fileInput" accept=".stl">
+
+            <div class="divider"></div>
+
+            <button id="btnTop" disabled>Top View</button>
+            <button id="btnFront" disabled>Front View</button>
+            <button id="btnRight" disabled>Right View</button>
+
+            <div class="divider"></div>
+
+            <button id="btnExportDXF" class="btn-export" disabled>Export DXF</button>
+        </div>
+
+        <div id="viewer">
+            <canvas id="canvas"></canvas>
+            <div id="dropzone">
+                <h2>Drop STL file here or click "Upload STL File"</h2>
+                <p style="margin-top: 1rem; font-size: 0.875rem;">Supports ASCII and Binary STL files</p>
+            </div>
+        </div>
+
+        <div id="status">Ready - No file loaded</div>
+    </div>
+
+    <script type="module" src="main-mvp.js"></script>
+</body>
+</html>
