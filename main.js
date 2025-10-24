@@ -8,20 +8,9 @@ let scene, camera, renderer, controls;
 let currentMesh = null;
 let isOrthographic = false;
 
-// DOM elements
-const canvas = document.getElementById('canvas');
-const fileInput = document.getElementById('fileInput');
-const dropzone = document.getElementById('dropzone');
-const status = document.getElementById('status');
-const viewer = document.getElementById('viewer');
-
-// Control buttons
-const btnTop = document.getElementById('btnTop');
-const btnFront = document.getElementById('btnFront');
-const btnRight = document.getElementById('btnRight');
-const btnIso = document.getElementById('btnIso');
-const btnExportDXF = document.getElementById('btnExportDXF');
-const btnExportSVG = document.getElementById('btnExportSVG');
+// DOM elements - will be initialized after DOM loads
+let canvas, fileInput, dropzone, status, viewer;
+let btnTop, btnFront, btnRight, btnIso, btnExportDXF, btnExportSVG;
 
 // Initialize the 3D scene
 function initScene() {
@@ -318,66 +307,118 @@ function enableControls(enabled) {
 
 // Update status message
 function updateStatus(message) {
-    status.textContent = message;
+    if (status) {
+        status.textContent = message;
+    }
 }
 
-// File input handler
-fileInput.addEventListener('change', (e) => {
-    const file = e.target.files[0];
-    if (file) {
-        loadSTEPFile(file);
+// Initialize DOM elements and set up event handlers
+function initDOMElements() {
+    // Get DOM elements
+    canvas = document.getElementById('canvas');
+    fileInput = document.getElementById('fileInput');
+    dropzone = document.getElementById('dropzone');
+    status = document.getElementById('status');
+    viewer = document.getElementById('viewer');
+
+    btnTop = document.getElementById('btnTop');
+    btnFront = document.getElementById('btnFront');
+    btnRight = document.getElementById('btnRight');
+    btnIso = document.getElementById('btnIso');
+    btnExportDXF = document.getElementById('btnExportDXF');
+    btnExportSVG = document.getElementById('btnExportSVG');
+
+    // Verify all elements were found
+    if (!canvas || !fileInput || !dropzone || !status || !viewer) {
+        console.error('Failed to find required DOM elements');
+        return false;
     }
-});
 
-// Drag and drop handlers
-viewer.addEventListener('dragover', (e) => {
-    e.preventDefault();
-    e.stopPropagation();
-    viewer.style.background = '#d5dbdb';
-});
+    console.log('All DOM elements found successfully');
+    return true;
+}
 
-viewer.addEventListener('dragleave', (e) => {
-    e.preventDefault();
-    e.stopPropagation();
-    viewer.style.background = '';
-});
+// Set up all event handlers
+function initEventHandlers() {
+    // File input handler
+    fileInput.addEventListener('change', (e) => {
+        console.log('File input change event triggered');
+        const file = e.target.files[0];
+        if (file) {
+            loadSTEPFile(file);
+        }
+    });
 
-viewer.addEventListener('drop', (e) => {
-    e.preventDefault();
-    e.stopPropagation();
-    viewer.style.background = '';
+    // Drag and drop handlers
+    viewer.addEventListener('dragover', (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        viewer.style.background = '#d5dbdb';
+    });
 
-    const file = e.dataTransfer.files[0];
-    if (file && (file.name.endsWith('.step') || file.name.endsWith('.stp'))) {
-        loadSTEPFile(file);
-    } else {
-        updateStatus('Error: Please drop a .step or .stp file');
+    viewer.addEventListener('dragleave', (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        viewer.style.background = '';
+    });
+
+    viewer.addEventListener('drop', (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        viewer.style.background = '';
+
+        const file = e.dataTransfer.files[0];
+        if (file && (file.name.endsWith('.step') || file.name.endsWith('.stp'))) {
+            loadSTEPFile(file);
+        } else {
+            updateStatus('Error: Please drop a .step or .stp file');
+        }
+    });
+
+    // View button handlers
+    btnTop.addEventListener('click', setViewTop);
+    btnFront.addEventListener('click', setViewFront);
+    btnRight.addEventListener('click', setViewRight);
+    btnIso.addEventListener('click', setViewIso);
+
+    // Export button handlers
+    btnExportDXF.addEventListener('click', () => {
+        if (currentMesh) {
+            updateStatus('Exporting DXF...');
+            exportDXF(scene, camera);
+            updateStatus('DXF exported successfully');
+        }
+    });
+
+    btnExportSVG.addEventListener('click', () => {
+        if (currentMesh) {
+            updateStatus('Exporting SVG...');
+            exportSVG(scene, camera);
+            updateStatus('SVG exported successfully');
+        }
+    });
+
+    console.log('All event handlers attached');
+}
+
+// Initialize application when DOM is ready
+document.addEventListener('DOMContentLoaded', () => {
+    console.log('DOMContentLoaded event fired');
+
+    // Initialize DOM elements
+    if (!initDOMElements()) {
+        console.error('Failed to initialize DOM elements');
+        return;
     }
+
+    // Initialize 3D scene
+    initScene();
+
+    // Set up event handlers
+    initEventHandlers();
+
+    // Update status
+    updateStatus('Ready - No file loaded');
+
+    console.log('Application initialized successfully');
 });
-
-// View button handlers
-btnTop.addEventListener('click', setViewTop);
-btnFront.addEventListener('click', setViewFront);
-btnRight.addEventListener('click', setViewRight);
-btnIso.addEventListener('click', setViewIso);
-
-// Export button handlers
-btnExportDXF.addEventListener('click', () => {
-    if (currentMesh) {
-        updateStatus('Exporting DXF...');
-        exportDXF(scene, camera);
-        updateStatus('DXF exported successfully');
-    }
-});
-
-btnExportSVG.addEventListener('click', () => {
-    if (currentMesh) {
-        updateStatus('Exporting SVG...');
-        exportSVG(scene, camera);
-        updateStatus('SVG exported successfully');
-    }
-});
-
-// Initialize scene on page load
-initScene();
-updateStatus('Ready - No file loaded');
