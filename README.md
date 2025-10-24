@@ -152,6 +152,38 @@ function downloadFile(data, filename, mime) {
 
 ---
 
+## Running Locally
+
+Because the application uses ES6 modules, you must run it from a web server (not by opening `index.html` directly in your browser).
+
+### Option 1: Using Python (Recommended)
+
+```bash
+python3 serve.py
+```
+
+This will start a local server at `http://localhost:8000` and automatically open your browser.
+
+### Option 2: Using Python's built-in server
+
+```bash
+python3 -m http.server 8000
+```
+
+Then open `http://localhost:8000` in your browser.
+
+### Option 3: Using Node.js
+
+```bash
+npx http-server -p 8000
+```
+
+### Option 4: Using any other local server
+
+Any static file server will work. Just serve the root directory.
+
+---
+
 ## Deployment on GitHub Pages
 
 1. Create a new repository, e.g. `step-to-dxf-viewer`.  
